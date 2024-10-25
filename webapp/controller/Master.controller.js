@@ -6,8 +6,9 @@ sap.ui.define([
 		"sap/ui/model/FilterOperator",
 		"sap/m/GroupHeaderListItem",
 		"sap/ui/Device",
+		"sap/ui/model/Sorter",
 		"zjblessons/masterDetailAppSidorovich/model/formatter"
-	], function (BaseController, JSONModel, Filter, FilterOperator, GroupHeaderListItem, Device, formatter) {
+	], function (BaseController, JSONModel, Filter, FilterOperator, GroupHeaderListItem, Device, Sorter, formatter) {
 		"use strict";
 
 		return BaseController.extend("zjblessons.masterDetailAppSidorovich.controller.Master", {
@@ -15,33 +16,11 @@ sap.ui.define([
 			formatter: formatter,
 
 
-			onInit : function () {
-				var oList = this.byId("list"),
-					oViewModel = this._createViewModel(),
-
-					iOriginalBusyDelay = oList.getBusyIndicatorDelay();
-
-
-				this._oList = oList;
-				this._oListFilterState = {
-					aFilter : [],
-					aSearch : []
-				};
-
-				this.setModel(oViewModel, "masterView");
-
-				oList.attachEventOnce("updateFinished", function(){
-					oViewModel.setProperty("/delay", iOriginalBusyDelay);
-				});
-
-				this.getView().addEventDelegate({
-					onBeforeFirstShow: function () {
-						this.getOwnerComponent().oListSelector.setBoundMasterList(oList);
-					}.bind(this)
-				});
-
-				this.getRouter().getRoute("master").attachPatternMatched(this._onMasterMatched, this);
-				this.getRouter().attachBypassed(this.onBypassed, this);
+			onInit: function () {
+			this.oView = this.getView();
+			this._bDescendingSort = false;
+			this.oTable = this.oView.byId("idTable");
+			this.oRouter = this.getOwnerComponent().getRouter();
 			},
 
 
@@ -51,46 +30,45 @@ sap.ui.define([
 			},
 
 
+			onSort: function () {
+			this._bDescendingSort = !this._bDescendingSort;
+			var oBinding = this.oTable.getBinding("items"),
+				oSorter = new Sorter("ItemID", this._bAscendingSort);
+
+				oBinding.sort(oSorter);
+			},
+		
 			onSearch : function (oEvent) {
 				if (oEvent.getParameters().refreshButtonPressed) {
 
 					this.onRefresh();
 					return;
 				}
-
+				var oTableSearchState = [];
 				var sQuery = oEvent.getParameter("query");
 
 				if (sQuery) {
-					this._oListFilterState.aSearch = [new Filter("HeaderID", FilterOperator.Contains, sQuery)];
+					oTableSearchState = [new Filter("ItemID", FilterOperator.Contains, sQuery)];
 				} else {
-					this._oListFilterState.aSearch = [];
+					oTableSearchState = [];
 				}
-				this._applyFilterSearch();
+				this.oTable.getBinding("items").filter(oTableSearchState, "Application");
 
 			},
-
+			
 
 			onRefresh : function () {
 				this._oList.getBinding("items").refresh();
 			},
 
 
-			onSelectionChange : function (oEvent) {
-				// get the list item, either from the listItem parameter or from the event's source itself (will depend on the device-dependent mode).
-				this._showDetail(oEvent.getParameter("listItem") || oEvent.getSource());
-			},
 
 			onBypassed : function () {
 				this._oList.removeSelections(true);
 			},
 
 
-			createGroupHeader : function (oGroup) {
-				return new GroupHeaderListItem({
-					title : oGroup.text,
-					upperCase : false
-				});
-			},
+
 
 
 			onNavBack : function() {
@@ -139,37 +117,7 @@ sap.ui.define([
 			},
 
 
-			_updateListItemCount : function (iTotalItems) {
-				var sTitle;
-				if (this._oList.getBinding("items").isLengthFinal()) {
-					sTitle = this.getResourceBundle().getText("masterTitleCount", [iTotalItems]);
-					this.getModel("masterView").setProperty("/title", sTitle);
-				}
-			},
 
-
-			_applyFilterSearch : function () {
-				var aFilters = this._oListFilterState.aSearch.concat(this._oListFilterState.aFilter),
-					oViewModel = this.getModel("masterView");
-				this._oList.getBinding("items").filter(aFilters, "Application");
-				if (aFilters.length !== 0) {
-					oViewModel.setProperty("/noDataText", this.getResourceBundle().getText("masterListNoDataWithFilterOrSearchText"));
-				} else if (this._oListFilterState.aSearch.length > 0) {
-					oViewModel.setProperty("/noDataText", this.getResourceBundle().getText("masterListNoDataText"));
-				}
-			},
-
-
-			_applyGroupSort : function (aSorters) {
-				this._oList.getBinding("items").sort(aSorters);
-			},
-
-
-			_updateFilterBar : function (sFilterBarText) {
-				var oViewModel = this.getModel("masterView");
-				oViewModel.setProperty("/isFilterBarVisible", (this._oListFilterState.aFilter.length > 0));
-				oViewModel.setProperty("/filterBarLabel", this.getResourceBundle().getText("masterFilterBarText", [sFilterBarText]));
-			}
 
 		});
 
