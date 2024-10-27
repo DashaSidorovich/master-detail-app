@@ -1,48 +1,163 @@
 <mvc:View
 	controllerName="zjblessons.masterDetailAppSidorovich.controller.Detail"
-	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc"
-	xmlns:semantic="sap.m.semantic">
+	xmlns="sap.uxap"
+	xmlns:m="sap.m"
+	xmlns:f="sap.f"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:mvc="sap.ui.core.mvc">
+	<ObjectPageLayout
+		id="ObjectPageLayout"
+		showTitleInHeaderContent="true"
+		alwaysShowContentHeader="false"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false">
+		<headerTitle>
+			<ObjectPageDynamicHeaderTitle>
+				<expandedHeading>
+					<m:Title text="{ItemID}" wrapping="true" class="sapUiSmallMarginEnd"/>
+				</expandedHeading>
 
-	<semantic:DetailPage
-		id="page"
-		navButtonPress="onNavBack"
-		showNavButton="{device>/system/phone}"
-		title="{i18n>detailTitle}"
-		busy="{detailView>/busy}"
-		busyIndicatorDelay="{detailView>/delay}">
+				<snappedHeading>
+					<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
+						<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
+							<f:Avatar
+								src="sap-icon://background"
+								displaySize="S"
+								displayShape="Circle"
+								class="sapUiTinyMarginEnd"/>
+							<m:Title text="{ItemID}" wrapping="true"/>
+						</m:FlexBox>
+					</m:FlexBox>
+				</snappedHeading>
 
-		<semantic:content>
-			<ObjectHeader
-				id="objectHeader"
-				title="{HeaderID}"
->
-			</ObjectHeader>
-			<IconTabBar
-				id="iconTabBar"
-				class="sapUiResponsiveContentPadding">
-				<items>
-					<IconTabFilter
-						id="iconTabBarFilter1"
-						icon="sap-icon://hint"
-						tooltip="{i18n>detailIconTabBarInfo}">
-					</IconTabFilter>
-					<IconTabFilter
-						id="iconTabBarFilter2"
-						icon="sap-icon://attachment"
-						tooltip="{i18n>detailIconTabBarAttachments}">
-					</IconTabFilter>
-				</items>
-			</IconTabBar>
+			</ObjectPageDynamicHeaderTitle>
+		</headerTitle>
 
-		</semantic:content>
+		<headerContent>
+			<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Stretch">
+				<f:Avatar
+					src="sap-icon://background"
+					displaySize="M"
+					displayShape="Circle"
+					class="sapUiTinyMarginEnd">
+				</f:Avatar>
+				<m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
+					<m:Label text="{i18n>TitleMaterialID}"/>
+					<m:Text text="{MaterialID}"/>
+				</m:VBox>
+				<m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
+					<m:Label text="{i18n>TitleGroupID}"/>
+					<m:Text text="{GroupID}"/>
+				</m:VBox>
+				<m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
+					<m:Label text="{i18n>TitlePrice}"/>
+					<m:ObjectNumber number="{Price} EUR" emphasized="false"/>
+				</m:VBox>
+				<m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
+					<m:Label text="{i18n>TitleQuantity}"/>
+					<m:Text text="{Quantity}"/>
+				</m:VBox>
+				<m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
+					<m:Label text="{i18n>TitleAmount}"/>
+					<m:Text text="{= ${Quantity}*${Price}}"/>
+				</m:VBox>
+			</m:FlexBox>
+		</headerContent>
 
-		<semantic:sendEmailAction>
-			<semantic:SendEmailAction
-				id="shareEmail"
-				press="onShareEmailPress"/>
-		</semantic:sendEmailAction>
+		<sections>
+			<ObjectPageSection title="{i18n>Header}">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+							<form:SimpleForm
+								maxContainerCols="2"
+								editable="false"
+								layout="ResponsiveGridLayout"
+								labelSpanL="12"
+								labelSpanM="12"
+								emptySpanL="0"
+								emptySpanM="0"
+								columnsL="1"
+								columnsM="1">
+								<form:content>
+									<m:Label text="{i18n>TitleHeaderID}"/>
+									<m:Text text="{HeaderID}"/>
+									<m:Label text="{i18n>TitleDocumentNumber}"/>
+									<m:Text id="documentNumber" text="{DocumentNumber}"/>
+									<m:Label text="{i18n>TitleDocumentDate}"/>
+									<m:Text id="documentDate" text="{DocumentDate}"/>
+								</form:content>
+							</form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="{i18n>Material}">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+							<form:SimpleForm
+								maxContainerCols="2"
+								editable="false"
+								layout="ResponsiveGridLayout"
+								labelSpanL="12"
+								labelSpanM="12"
+								emptySpanL="0"
+								emptySpanM="0"
+								columnsL="1"
+								columnsM="1">
+								<form:content>
+									<m:Label text="{i18n>TitleMaterialID}"/>
+									<m:Text text="{MaterialID}"/>
+									<m:Label text="{i18n>TitleMaterialText}"/>
+										<m:Text id="materialText" text="{MaterialText}"/>
+									<m:Label text="{i18n>TitleMaterialDescription}"/>
+									<m:Text id="materialDescription" text="{MaterialDescription}"/>
+								</form:content>
+							</form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			<ObjectPageSection title="{i18n>Group}">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+							<form:SimpleForm
+								maxContainerCols="2"
+								editable="false"
+								layout="ResponsiveGridLayout"
+								labelSpanL="12"
+								labelSpanM="12"
+								emptySpanL="0"
+								emptySpanM="0"
+								columnsL="1"
+								columnsM="1">
+								<form:content>
+									<m:Label text="{i18n>TitleGroupID}"/>
+									<m:Text text="{GroupID}"/>
+									<m:Label text="{i18n>TitleGroupText}"/>
+									<m:Text id="groupText" text="{GroupText}"/>
+									<m:Label text="{i18n>TitleGroupDescription}"/>
+									<m:Text id="groupDescription" text="{GroupDescription}"/>
+								</form:content>
+							</form:SimpleForm>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			
+		</sections>
 
-	</semantic:DetailPage>
+		<footer>
+			<m:OverflowToolbar>
+				<m:ToolbarSpacer/>
+				<m:Button type="Accept" text="Save"/>
+				<m:Button type="Reject" text="Cancel"/>
+			</m:OverflowToolbar>
+		</footer>
+	</ObjectPageLayout>
 
 </mvc:View>

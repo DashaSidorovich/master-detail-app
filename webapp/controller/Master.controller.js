@@ -67,6 +67,25 @@ sap.ui.define([
 				this._oList.removeSelections(true);
 			},
 
+			onListItemPress: function (oEvent) {
+			    var oItem = oEvent.getSource();
+			    var sItemId = oItem.getBindingContext().getProperty("ItemID");
+			    var sHeaderId = oItem.getBindingContext().getProperty("HeaderID");
+				var sMaterialId = oItem.getBindingContext().getProperty("MaterialID");
+				var sGroupId = oItem.getBindingContext().getProperty("GroupID");
+
+			    if (sItemId && sHeaderId) {
+			        var bReplace = !Device.system.phone;
+			        this.getRouter().navTo("object", {
+			            objectId: sItemId,
+			            headerId: sHeaderId,
+			            materialId: sMaterialId,
+			            groupId: sGroupId
+			        }, bReplace);
+			    } 
+			},
+
+
 
 
 
@@ -109,12 +128,6 @@ sap.ui.define([
 			},
 
 
-			_showDetail : function (oItem) {
-				var bReplace = !Device.system.phone;
-				this.getRouter().navTo("object", {
-					objectId : oItem.getBindingContext().getProperty("HeaderID")
-				}, bReplace);
-			},
 
 
 

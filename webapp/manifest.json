@@ -95,7 +95,7 @@
 					]
 				},
 				{
-					"pattern": "zjblessons_base_Items/{objectId}",
+					"pattern": "zjblessons_base_Items/{objectId}/{headerId}/{materialId}/{groupId}",
 					"name": "object",
 					"target": [
 						"master",

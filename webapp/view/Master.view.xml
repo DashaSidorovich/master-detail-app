@@ -19,7 +19,7 @@
 			<VBox fitContainer="true">
 				<OverflowToolbar class="sapFDynamicPageAlignContent">
 					<ToolbarSpacer/>
-					<SearchField search="onSearch" width="17.5rem"/>
+					<SearchField search="onSearch" width="11.5rem"/>
 					<OverflowToolbarButton icon="sap-icon://sort" text="Sort" type="Transparent" press="onSort"/>
 				</OverflowToolbar>
 				<Table
@@ -52,7 +52,7 @@
 										],
 										formatOptions: {showMeasure: false}
 									}"
-									unit="руб"/>
+									unit="EUR"/>
 							</cells>
 						</ColumnListItem>
 					</items>

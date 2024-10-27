@@ -10,10 +10,6 @@ sap.ui.define([
 
 			formatter: formatter,
 
-			/* =========================================================== */
-			/* lifecycle methods                                           */
-			/* =========================================================== */
-
 			onInit : function () {
 			
 				var oViewModel = new JSONModel({
@@ -29,28 +25,68 @@ sap.ui.define([
 			},
 
 
-			onShareEmailPress : function () {
-				var oViewModel = this.getModel("detailView");
-
-				sap.m.URLHelper.triggerEmail(
-					null,
-					oViewModel.getProperty("/shareSendEmailSubject"),
-					oViewModel.getProperty("/shareSendEmailMessage")
-				);
-			},
 
 
 
 
-			_onObjectMatched : function (oEvent) {
-				var sObjectId =  oEvent.getParameter("arguments").objectId;
-				this.getModel().metadataLoaded().then( function() {
-					var sObjectPath = this.getModel().createKey("zjblessons_base_Items", {
-						HeaderID :  sObjectId
-					});
+			_onObjectMatched: function (oEvent) {
+			    var sObjectId = oEvent.getParameter("arguments").objectId;
+			    var sHeaderId = oEvent.getParameter("arguments").headerId;
+			    var sMaterialId = oEvent.getParameter("arguments").materialId;
+			    var sGroupId = oEvent.getParameter("arguments").groupId;
+
+			    this.getModel().metadataLoaded().then(function() {
+			        var sObjectPath = this.getModel().createKey("zjblessons_base_Items", {
+			            ItemID: sObjectId,
+			            HeaderID: sHeaderId
+			        });
+
+			        var sHeaderPath = "/zjblessons_base_Headers('" + sHeaderId + "')";
+			        this.getModel().read(sHeaderPath, {
+			            success: function(oData) {
+			                var oDocumentNumber = this.getView().byId("documentNumber");
+			                oDocumentNumber.setText(oData.DocumentNumber);
+			                
+			                var oDocumentDate = this.getView().byId("documentDate");
+			                oDocumentDate.setText(oData.DocumentDate);
+			            }.bind(this),
+			            error: function(oError) {
+			            }
+			        });
+			        
+			        var sMaterialPath = "/zjblessons_base_Materials('" + sMaterialId + "')";
+			        this.getModel().read(sMaterialPath, {
+			            success: function(oData) {
+			                var oMaterialText = this.getView().byId("materialText");
+			                oMaterialText.setText(oData.MaterialText);
+			                
+			                var oMaterialDescription = this.getView().byId("materialDescription");
+			                oMaterialDescription.setText(oData.MaterialDescription);
+			            }.bind(this),
+			            error: function(oError) {
+			            }
+			        });
+			        
+			        var sGroupPath = "/zjblessons_base_Groups('" + sGroupId + "')";
+			        this.getModel().read(sGroupPath, {
+			            success: function(oData) {
+			                var oGroupText = this.getView().byId("groupText");
+			                oGroupText.setText(oData.GroupText);
+			                
+			                var oGroupDescription = this.getView().byId("groupDescription");
+			                oGroupDescription.setText(oData.GroupDescription);
+			            }.bind(this),
+			            error: function(oError) {
+			            }
+			        });
+						
 					this._bindView("/" + sObjectPath);
-				}.bind(this));
+					}.bind(this));
 			},
+			
+
+
+
 
 
 			_bindView : function (sObjectPath) {
@@ -83,19 +119,6 @@ sap.ui.define([
 					return;
 				}
 
-				var sPath = oElementBinding.getPath(),
-					oResourceBundle = this.getResourceBundle(),
-					oObject = oView.getModel().getObject(sPath),
-					sObjectId = oObject.HeaderID,
-					sObjectName = oObject.HeaderID,
-					oViewModel = this.getModel("detailView");
-
-				this.getOwnerComponent().oListSelector.selectAListItem(sPath);
-
-				oViewModel.setProperty("/shareSendEmailSubject",
-					oResourceBundle.getText("shareSendEmailObjectSubject", [sObjectId]));
-				oViewModel.setProperty("/shareSendEmailMessage",
-					oResourceBundle.getText("shareSendEmailObjectMessage", [sObjectName, sObjectId, location.href]));
 			},
 
 			_onMetadataLoaded : function () {
