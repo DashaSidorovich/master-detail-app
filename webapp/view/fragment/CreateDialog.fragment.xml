@@ -1,0 +1,51 @@
+<core:FragmentDefinition
+   xmlns="sap.m"
+   xmlns:core="sap.ui.core"
+
+   >
+    <Dialog id="createDialog"
+      title="{i18n>createDialogTitle}"
+      class="sapUiContentPadding"
+      beforeOpen="onDialogBeforeOpen">
+      
+      <content>
+      	<VBox>
+      	<VBox>
+      		<Label labelFor="idItemID" text="{i18n>labelItemID}"/>
+      		<Input value="{path: 'ItemID', mode: 'TwoWay'}" id="idItemID"/>
+      	</VBox>
+      	<VBox>
+      		<Label labelFor="idHeaderID" text="{i18n>labelHeaderID}"/>
+      		<Input value="{path: 'HeaderID', mode: 'TwoWay'}" id="idHeaderID"/>
+      	</VBox>
+      	<VBox>
+      		<Label labelFor="idMaterialID" text="{i18n>labelMaterialID}"/>
+      		<Input value="{path: 'MaterialID', mode: 'TwoWay'}" id="idMaterialID"/>
+      	</VBox>
+      	<VBox>
+      		<Label labelFor="idQuantity" text="{i18n>labelQuantity}"/>
+      		<Input value="{path: 'Quantity', mode: 'TwoWay'}" id="idQuantity" type="Number"/>
+      	</VBox>
+      	<VBox>
+      		<Label labelFor="idPrice" text="{i18n>labelPrice}"/>
+      		<Input value="{path: 'Price', mode: 'TwoWay'}" id="idPrice" type="Number"/>
+      	</VBox>
+		<VBox>
+      		<Label labelFor="idCreatedBy" text="{i18n>labelCreatedBy}"/>
+      		<Input value="{path: 'CreatedBy', mode: 'TwoWay'}" id="idCreatedBy"/>
+      	</VBox>
+      	<VBox>
+      		<Label labelFor="idModifiedBy" text="{i18n>labelModifiedBy}"/>
+      		<Input value="{path: 'ModifiedBy', mode: 'TwoWay'}" id="idModifiedBy"/>
+      	</VBox>
+      </VBox>
+      </content>
+      <beginButton>
+      	<Button type="Emphasized" press="onPressSave" text="{i18n>saveButton}"/>
+      </beginButton>
+      <endButton>
+      	<Button type="Transparent" press="onPressCancel" text="{i18n>cancelButton}"/>
+      </endButton>
+    </Dialog>
+      
+</core:FragmentDefinition>

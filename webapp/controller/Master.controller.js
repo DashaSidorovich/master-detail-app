@@ -7,8 +7,12 @@ sap.ui.define([
 		"sap/m/GroupHeaderListItem",
 		"sap/ui/Device",
 		"sap/ui/model/Sorter",
-		"zjblessons/masterDetailAppSidorovich/model/formatter"
-	], function (BaseController, JSONModel, Filter, FilterOperator, GroupHeaderListItem, Device, Sorter, formatter) {
+		"sap/m/MessageBox",
+		"sap/m/MessageToast",
+		"zjblessons/masterDetailAppSidorovich/model/formatter",
+		"sap/ui/core/Fragment"
+
+	], function (BaseController, JSONModel, Filter, FilterOperator, GroupHeaderListItem, Device, Sorter, MessageBox, MessageToast, formatter, Fragment) {
 		"use strict";
 
 		return BaseController.extend("zjblessons.masterDetailAppSidorovich.controller.Master", {
@@ -56,7 +60,57 @@ sap.ui.define([
 
 			},
 			
+			onCreate: function(){
+				this._loadCreateDialog();
+			},
+			
+			_loadCreateDialog: async function() {
+			    this._oDialog ??= await Fragment.load({
+			        name: "zjblessons.masterDetailAppSidorovich.view.fragment.CreateDialog",
+			        controller: this, 
+			        id: "createDialog"
+			    }).then(oDialog => {
+			    	this.getView().addDependent(this.oDialog);
+			    	oDialog.setModel(this.getView().getModel("i18n"), "i18n");
+			    	return oDialog;
+				});
+				this._oDialog.open();
+			},
+			
+			onDialogBeforeOpen: function(oEvent){
 
+				const oDialog = oEvent.getSource();
+				const oParams = {
+					Created: new Date(),
+					Modified: new Date()
+				},
+				oEntry=this.getModel().createEntry('/zjblessons_base_Items', {
+					properties: oParams
+				});
+				oDialog.setBindingContext(oEntry);
+				oDialog.setModel(this.getModel()); 
+			},
+			
+			onPressSave: function(oEvent){
+				const oContext = this._oDialog.getBindingContext();
+			    console.log(oContext.getObject());
+
+				this.getModel().submitChanges({
+					success: () => {
+						var msg = this.getResourceBundle().getText("successCreate");
+						MessageToast.show(msg);
+						console.log(oContext.getObject());
+						this._bindTable();
+					}
+				});
+				this._oDialog.close();
+			},
+			
+			onPressCancel: function(){
+				this.getModel().resetChanges();
+				this._oDialog.close();
+			},
+			
 			onRefresh : function () {
 				this._oList.getBinding("items").refresh();
 			},
@@ -74,7 +128,7 @@ sap.ui.define([
 				var sMaterialId = oItem.getBindingContext().getProperty("MaterialID");
 				var sGroupId = oItem.getBindingContext().getProperty("GroupID");
 
-			    if (sItemId && sHeaderId) {
+			    if (sItemId && sHeaderId && sMaterialId && sGroupId) {
 			        var bReplace = !Device.system.phone;
 			        this.getRouter().navTo("object", {
 			            objectId: sItemId,
