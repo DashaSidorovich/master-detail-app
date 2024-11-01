@@ -11,8 +11,8 @@
       <content>
       	<VBox>
       	<VBox>
-      		<Label labelFor="idItemID" text="{i18n>labelItemID}"/>
-      		<Input value="{path: 'ItemID', mode: 'TwoWay'}" id="idItemID"/>
+      		<Label labelFor="idID" text="{i18n>labelItemID}"/>
+      		<Input value="{path: 'ID', mode: 'TwoWay'}" id="idID"/>
       	</VBox>
       	<VBox>
       		<Label labelFor="idHeaderID" text="{i18n>labelHeaderID}"/>

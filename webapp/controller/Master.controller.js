@@ -38,7 +38,6 @@ sap.ui.define([
 			this._bDescendingSort = !this._bDescendingSort;
 			var oBinding = this.oTable.getBinding("items"),
 				oSorter = new Sorter("ItemID", this._bAscendingSort);
-
 				oBinding.sort(oSorter);
 			},
 		
@@ -81,10 +80,11 @@ sap.ui.define([
 
 				const oDialog = oEvent.getSource();
 				const oParams = {
+					Instance: "1000000",
 					Created: new Date(),
 					Modified: new Date()
 				},
-				oEntry=this.getModel().createEntry('/zjblessons_base_Items', {
+				oEntry=this.getModel().createEntry('/tItems', {
 					properties: oParams
 				});
 				oDialog.setBindingContext(oEntry);
@@ -100,7 +100,7 @@ sap.ui.define([
 						var msg = this.getResourceBundle().getText("successCreate");
 						MessageToast.show(msg);
 						console.log(oContext.getObject());
-						this._bindTable();
+            			this.onSort();
 					}
 				});
 				this._oDialog.close();
@@ -138,11 +138,6 @@ sap.ui.define([
 			        }, bReplace);
 			    } 
 			},
-
-
-
-
-
 
 			onNavBack : function() {
 				history.go(-1);

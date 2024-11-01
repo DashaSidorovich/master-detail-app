@@ -2,8 +2,10 @@
 sap.ui.define([
 		"zjblessons/masterDetailAppSidorovich/controller/BaseController",
 		"sap/ui/model/json/JSONModel",
-		"zjblessons/masterDetailAppSidorovich/model/formatter"
-	], function (BaseController, JSONModel, formatter) {
+		"zjblessons/masterDetailAppSidorovich/model/formatter",
+		"sap/m/MessageBox"
+
+	], function (BaseController, JSONModel, formatter, MessageBox) {
 		"use strict";
 
 		return BaseController.extend("zjblessons.masterDetailAppSidorovich.controller.Detail", {
@@ -86,7 +88,30 @@ sap.ui.define([
 			
 
 
-
+			onDelete(oEvent){
+				const oView = this.getView(),
+					sPath = oView.getBindingContext().getPath();
+					console.log(sPath);
+				MessageBox.confirm(this.getResourceBundle().getText("deleteMessage"), {
+				title: this.getResourceBundle().getText("deleteConfirm"),                                    
+    			actions: [sap.m.MessageBox.Action.OK,
+            	sap.m.MessageBox.Action.CANCEL],         
+    			emphasizedAction: sap.m.MessageBox.Action.OK,
+    			onClose: function(oAction){
+					if(oAction === sap.m.MessageBox.Action.OK) {    
+						oView.setBusy(true);
+						this.getModel().remove(sPath,
+						{
+							success: function(oData){
+							oView.setBusy(false);
+							this.onNavBack();
+							}.bind(this)
+						});
+					}
+				}.bind(this)
+				});
+					
+			},
 
 
 			_bindView : function (sObjectPath) {

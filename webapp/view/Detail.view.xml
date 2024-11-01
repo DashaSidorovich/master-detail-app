@@ -32,6 +32,13 @@
 					</m:FlexBox>
 				</snappedHeading>
 
+				<actions>
+					<m:Button
+						icon="sap-icon://delete"
+						type="Reject"
+						press="onDelete"/>
+				</actions>
+
 			</ObjectPageDynamicHeaderTitle>
 		</headerTitle>
 
