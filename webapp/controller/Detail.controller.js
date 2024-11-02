@@ -3,9 +3,10 @@ sap.ui.define([
 		"zjblessons/masterDetailAppSidorovich/controller/BaseController",
 		"sap/ui/model/json/JSONModel",
 		"zjblessons/masterDetailAppSidorovich/model/formatter",
-		"sap/m/MessageBox"
+		"sap/m/MessageBox",
+		"sap/m/MessageToast"
 
-	], function (BaseController, JSONModel, formatter, MessageBox) {
+	], function (BaseController, JSONModel, formatter, MessageBox, MessageToast) {
 		"use strict";
 
 		return BaseController.extend("zjblessons.masterDetailAppSidorovich.controller.Detail", {
@@ -88,29 +89,31 @@ sap.ui.define([
 			
 
 
-			onDelete(oEvent){
-				const oView = this.getView(),
-					sPath = oView.getBindingContext().getPath();
-					console.log(sPath);
+			onDelete: function (oEvent){
+				var oBindingContext = oEvent.getSource().getBindingContext(),
+				key = this.getModel().createKey('/tItems',
+				{
+					ID: oBindingContext.getProperty('ItemID'),
+					HeaderID: oBindingContext.getProperty('HeaderID'),
+					Instance: "1000000"
+				});
 				MessageBox.confirm(this.getResourceBundle().getText("deleteMessage"), {
 				title: this.getResourceBundle().getText("deleteConfirm"),                                    
     			actions: [sap.m.MessageBox.Action.OK,
             	sap.m.MessageBox.Action.CANCEL],         
     			emphasizedAction: sap.m.MessageBox.Action.OK,
     			onClose: function(oAction){
-					if(oAction === sap.m.MessageBox.Action.OK) {    
-						oView.setBusy(true);
-						this.getModel().remove(sPath,
+					if(oAction === sap.m.MessageBox.Action.OK) {
+						this.getModel().remove(key,
 						{
 							success: function(oData){
-							oView.setBusy(false);
-							this.onNavBack();
+							var msg = this.getResourceBundle().getText("successDelete");
+							MessageToast.show(msg);
 							}.bind(this)
 						});
 					}
 				}.bind(this)
 				});
-					
 			},
 
 
