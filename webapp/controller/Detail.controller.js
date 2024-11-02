@@ -97,7 +97,7 @@ sap.ui.define([
 					HeaderID: oBindingContext.getProperty('HeaderID'),
 					Instance: "1000000"
 				});
-				MessageBox.confirm(this.getResourceBundle().getText("deleteMessage"), {
+				MessageBox.warning(this.getResourceBundle().getText("deleteMessage"), {
 				title: this.getResourceBundle().getText("deleteConfirm"),                                    
     			actions: [sap.m.MessageBox.Action.OK,
             	sap.m.MessageBox.Action.CANCEL],         
@@ -109,7 +109,12 @@ sap.ui.define([
 							success: function(oData){
 							var msg = this.getResourceBundle().getText("successDelete");
 							MessageToast.show(msg);
-							}.bind(this)
+							}.bind(this),
+							error: function(oData){
+								sap.m.MessageBox.error(this.getResourceBundle().getText("failedDeleteMessage"), {
+								    title: "deleteFailed"                                     
+								});
+							}
 						});
 					}
 				}.bind(this)
